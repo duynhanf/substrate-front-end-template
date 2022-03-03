@@ -3,7 +3,13 @@ import { Feed, Grid } from 'semantic-ui-react'
 
 import { useSubstrateState } from './substrate-lib'
 
+// Events to be filtered from feed
+const FILTERED_EVENTS = [
+  'system:ExtrinsicSuccess::(phase={"applyExtrinsic":0})',
+]
+
 const eventName = ev => `${ev.section}:${ev.method}`
+const eventParams = ev => JSON.stringify(ev.data)
 
 function Main(props) {
   const { api } = useSubstrateState()
@@ -17,42 +23,29 @@ function Main(props) {
         // loop through the Vec<EventRecord>
         events.forEach(record => {
           // extract the phase, event and the event types
-          const { event } = record
+          const { event, phase } = record
 
           // show what we are busy with
           const evHuman = event.toHuman()
           const evName = eventName(evHuman)
+          const evParams = eventParams(evHuman)
+          console.log(evName);
+          console.log(evParams);
+          const evNamePhase = `${evName}::(phase=${phase.toString()})`
 
-          if (evName.includes('templateModule:')) {
-            const eventNames = evName.split(':');
-            let eventContent = '';
-            switch (eventNames[1]) {
-              case 'HighestPriceUpdated':
-                eventContent = `${evHuman.data[1]} đã trả ${evHuman.data[0]}`;
-                break;
-              case 'AuctionStarted':
-                eventContent = `Cuộc đấu giá đã bắt đầu`;
-                break;
-              case 'AuctionEnded':
-                eventContent = `Cuộc đấu giá đã kết thúc. ${evHuman.data[1]} đã chiến thắng với giá ${evHuman.data[0]}`;
-                break;
-              default:
-                break;
-            }
+          if (FILTERED_EVENTS.includes(evNamePhase)) return
 
-            setEventFeed(e => [
-              ...e,
-              {
-                key: keyNum,
-                icon: 'bell',
-                summary: eventNames[1],
-                content: eventContent,
-              },
-            ])
-            keyNum += 1
-          } else {
-            return;
-          }
+          setEventFeed(e => [
+            {
+              key: keyNum,
+              icon: 'bell',
+              summary: evName,
+              content: evParams,
+            },
+            ...e,
+          ])
+
+          keyNum += 1
         })
       })
     }
@@ -64,8 +57,8 @@ function Main(props) {
   const { feedMaxHeight = 250 } = props
 
   return (
-    <Grid.Column width={8}>
-      <h1 style={{ float: 'left' }}>Auction Events</h1>
+    <Grid.Column width={24}>
+      <h1 style={{ float: 'left' }}>Blockchain Events</h1>
       <Feed
         style={{ clear: 'both', overflow: 'auto', maxHeight: feedMaxHeight }}
         events={eventFeed}
@@ -74,7 +67,7 @@ function Main(props) {
   )
 }
 
-export default function Events(props) {
+export default function BlockchainEvents(props) {
   const { api } = useSubstrateState()
   return api.query && api.query.system && api.query.system.events ? (
     <Main {...props} />

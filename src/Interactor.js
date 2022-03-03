@@ -10,14 +10,14 @@ function Main(props) {
   const { api, jsonrpc } = useSubstrateState()
   const [status, setStatus] = useState(null)
 
-  const [interxType, setInterxType] = useState('EXTRINSIC')
+  const [interxType, setInterxType] = useState('QUERY')
   const [palletRPCs, setPalletRPCs] = useState([])
   const [callables, setCallables] = useState([])
   const [paramFields, setParamFields] = useState([])
 
   const initFormState = {
-    palletRpc: '',
-    callable: '',
+    palletRpc: 'templateModule',
+    callable: 'highestPrice',
     inputParams: [],
   }
 
@@ -166,13 +166,13 @@ function Main(props) {
       <Form>
         <Form.Group style={{ overflowX: 'auto' }} inline>
           <label>Interaction Type</label>
-          <Form.Radio
+          {/* <Form.Radio
             label="Extrinsic"
             name="interxType"
             value="EXTRINSIC"
             checked={interxType === 'EXTRINSIC'}
             onChange={onInterxTypeChange}
-          />
+          /> */}
           <Form.Radio
             label="Query"
             name="interxType"
@@ -180,7 +180,7 @@ function Main(props) {
             checked={interxType === 'QUERY'}
             onChange={onInterxTypeChange}
           />
-          <Form.Radio
+          {/* <Form.Radio
             label="RPC"
             name="interxType"
             value="RPC"
@@ -193,7 +193,7 @@ function Main(props) {
             value="CONSTANT"
             checked={interxType === 'CONSTANT'}
             onChange={onInterxTypeChange}
-          />
+          /> */}
         </Form.Group>
         <Form.Field>
           <Dropdown
