@@ -28,13 +28,13 @@ function Main(props) {
             let eventContent = '';
             switch (eventNames[1]) {
               case 'HighestPriceUpdated':
-                eventContent = `${evHuman.data[1]} đã trả ${evHuman.data[0]}`;
+                eventContent = `${evHuman.data[1]} đã đặt giá ${evHuman.data[0]} USDT`;
                 break;
               case 'AuctionStarted':
                 eventContent = `Cuộc đấu giá đã bắt đầu`;
                 break;
               case 'AuctionEnded':
-                eventContent = `Cuộc đấu giá đã kết thúc. ${evHuman.data[1]} đã chiến thắng với giá ${evHuman.data[0]}`;
+                eventContent = `Cuộc đấu giá đã kết thúc. ${evHuman.data[1]} đã chiến thắng với giá ${evHuman.data[0]} USDT`;
                 break;
               default:
                 break;
